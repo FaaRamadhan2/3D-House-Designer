@@ -1,0 +1,546 @@
+/*
+House Blueprint 3D Designer
+Copyright (C) 2026 FaaRamadhan2
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+:root {
+  --bg: #0f141b;
+  --panel: #151c25;
+  --panel-2: #101720;
+  --panel-3: #1b2530;
+  --line: #2a3542;
+  --line-soft: #202a35;
+  --text: #e6edf5;
+  --muted: #94a3b8;
+  --muted-2: #69778a;
+  --accent: #3b82f6;
+  --accent-2: #60a5fa;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+  --radius: 8px;
+  --topbar-height: 64px;
+  --status-height: 34px;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--text);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: #1a2430;
+  color: var(--text);
+  min-height: 32px;
+  padding: 7px 10px;
+  cursor: pointer;
+  transition: border-color 160ms ease, background 160ms ease, color 160ms ease;
+  white-space: nowrap;
+}
+
+button:hover {
+  background: #223044;
+  border-color: #3b4d62;
+}
+
+button.active,
+button[aria-pressed="true"] {
+  background: rgba(59, 130, 246, 0.2);
+  border-color: var(--accent);
+  color: #dbeafe;
+}
+
+button.danger,
+.delete-button {
+  border-color: rgba(239, 68, 68, 0.45);
+}
+
+button.danger:hover,
+.delete-button:hover {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: var(--danger);
+}
+
+.app-shell {
+  display: grid;
+  grid-template-columns: 238px minmax(0, 1fr) 308px;
+  grid-template-rows: var(--topbar-height) minmax(0, 1fr) var(--status-height);
+  grid-template-areas:
+    "topbar topbar topbar"
+    "left workspace right"
+    "status status status";
+  width: 100vw;
+  height: 100vh;
+  min-width: 980px;
+}
+
+.topbar {
+  grid-area: topbar;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 14px;
+  background: #101720;
+  border-bottom: 1px solid var(--line);
+  min-width: 0;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 285px;
+}
+
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #2563eb, #14b8a6);
+  color: white;
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: 0;
+}
+
+.brand strong,
+.brand small {
+  display: block;
+}
+
+.brand strong {
+  line-height: 1.2;
+  font-size: 15px;
+}
+
+.brand small {
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.top-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  padding-bottom: 2px;
+}
+
+.top-actions button,
+.view-actions button {
+  min-height: 34px;
+  font-size: 12px;
+}
+
+.view-actions {
+  display: flex;
+  gap: 5px;
+  margin-left: auto;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #0d131a;
+}
+
+.view-actions button {
+  border-color: transparent;
+  background: transparent;
+  padding: 6px 9px;
+}
+
+.left-sidebar,
+.right-sidebar {
+  min-height: 0;
+  overflow: auto;
+  background: var(--panel);
+}
+
+.left-sidebar {
+  grid-area: left;
+  border-right: 1px solid var(--line);
+  padding: 12px;
+}
+
+.right-sidebar {
+  grid-area: right;
+  border-left: 1px solid var(--line);
+}
+
+.side-section,
+.properties-shell {
+  margin-bottom: 14px;
+}
+
+.side-section h2,
+.properties-title h2,
+.property-group h3 {
+  margin: 0 0 10px;
+  color: #f8fafc;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.tool-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 6px;
+}
+
+.tool-button {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  text-align: left;
+}
+
+.tool-button span {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  min-width: 28px;
+  height: 22px;
+  border-radius: 5px;
+  background: #0d131a;
+  color: var(--accent-2);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.button-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.button-grid button {
+  font-size: 12px;
+  padding-inline: 8px;
+}
+
+.field,
+.property-row {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.toggle-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 28px;
+  margin-bottom: 8px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.toggle-field span {
+  line-height: 1.25;
+}
+
+.field span,
+.property-row label {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  min-height: 34px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: #0d131a;
+  color: var(--text);
+  padding: 7px 9px;
+  outline: none;
+}
+
+textarea {
+  min-height: 74px;
+  resize: vertical;
+}
+
+input[type="checkbox"] {
+  width: auto;
+  min-height: auto;
+  accent-color: var(--accent);
+}
+
+input[type="color"] {
+  min-height: 36px;
+  padding: 3px;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.14);
+}
+
+input[readonly] {
+  color: var(--muted);
+  background: #111923;
+}
+
+.workspace {
+  grid-area: workspace;
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  background: #0b1016;
+}
+
+.pane {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  flex: 1 1 50%;
+  border-right: 1px solid var(--line-soft);
+}
+
+.pane:last-child {
+  border-right: 0;
+}
+
+.pane-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  min-height: 36px;
+  padding: 8px 11px;
+  border-bottom: 1px solid var(--line-soft);
+  background: #111923;
+  color: var(--text);
+  font-size: 12px;
+}
+
+.pane-header span:last-child {
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#blueprintCanvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  background: #101620;
+  cursor: crosshair;
+}
+
+.three-container {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.three-container canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.webgl-error {
+  position: absolute;
+  inset: 48px 16px auto;
+  padding: 12px;
+  border: 1px solid rgba(239, 68, 68, 0.45);
+  border-radius: 8px;
+  background: rgba(127, 29, 29, 0.45);
+  color: #fecaca;
+  font-size: 13px;
+}
+
+.properties-shell {
+  padding: 12px;
+}
+
+.properties-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.properties-title h2 {
+  margin-bottom: 0;
+}
+
+.delete-button {
+  min-height: 30px;
+  padding: 5px 9px;
+  font-size: 12px;
+}
+
+.properties-panel {
+  display: grid;
+  gap: 12px;
+}
+
+.property-group {
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel-2);
+}
+
+.property-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.property-grid .wide {
+  grid-column: 1 / -1;
+}
+
+.orientation-controls {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.orientation-controls button {
+  min-height: 30px;
+  padding: 6px 7px;
+  font-size: 12px;
+}
+
+.empty-state {
+  color: var(--muted);
+  line-height: 1.55;
+  font-size: 13px;
+}
+
+.counter-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.counter {
+  padding: 8px;
+  border-radius: 7px;
+  background: #111923;
+  border: 1px solid var(--line-soft);
+}
+
+.counter strong {
+  display: block;
+  font-size: 17px;
+}
+
+.counter span {
+  display: block;
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.statusbar {
+  grid-area: status;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+  padding: 7px 12px;
+  border-top: 1px solid var(--line);
+  background: #0d131a;
+  color: var(--muted);
+  font-size: 12px;
+  overflow: hidden;
+}
+
+.statusbar span {
+  white-space: nowrap;
+}
+
+.statusbar strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.status-message {
+  margin-left: auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.view-2d .preview-pane {
+  display: none;
+}
+
+.view-3d .blueprint-pane {
+  display: none;
+}
+
+.view-2d .blueprint-pane,
+.view-3d .preview-pane {
+  flex-basis: 100%;
+}
+
+@media (max-width: 1180px) {
+  .app-shell {
+    grid-template-columns: 210px minmax(0, 1fr) 286px;
+    min-width: 900px;
+  }
+
+  .brand {
+    min-width: 245px;
+  }
+
+  .brand small {
+    display: none;
+  }
+
+  .top-actions button {
+    font-size: 11px;
+    padding-inline: 8px;
+  }
+}

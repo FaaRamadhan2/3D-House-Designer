@@ -1,0 +1,171 @@
+<!doctype html>
+<!--
+House Blueprint 3D Designer
+Copyright (C) 2026 FaaRamadhan2
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program. If not, see <https://www.gnu.org/licenses/>.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>House Blueprint 3D Designer</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script defer src="script.js"></script>
+</head>
+<body>
+  <div id="app" class="app-shell view-split">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark">HB</span>
+        <div>
+          <strong>House Blueprint 3D Designer</strong>
+          <small>2D blueprint to generated 3D house</small>
+        </div>
+      </div>
+
+      <nav class="top-actions" aria-label="Project actions">
+        <button type="button" data-action="new">New Project</button>
+        <button type="button" data-action="save">Save</button>
+        <button type="button" data-action="load">Load</button>
+        <button type="button" data-action="export-json">Export JSON</button>
+        <button type="button" data-action="import-json">Import JSON</button>
+        <button type="button" data-action="export-blueprint">Export Blueprint PNG</button>
+        <button type="button" data-action="export-3d">Export 3D Screenshot PNG</button>
+      </nav>
+
+      <div class="view-actions" aria-label="View mode">
+        <button type="button" class="view-button" data-view="2d">2D</button>
+        <button type="button" class="view-button" data-view="3d">3D</button>
+        <button type="button" class="view-button active" data-view="split">Split</button>
+      </div>
+
+      <input id="jsonFileInput" type="file" accept="application/json,.json" hidden>
+    </header>
+
+    <aside class="left-sidebar">
+      <section class="side-section">
+        <h2>Tools</h2>
+        <div class="tool-grid" role="toolbar" aria-label="Blueprint tools">
+          <button type="button" class="tool-button active" data-tool="select"><span>V</span>Select</button>
+          <button type="button" class="tool-button" data-tool="wall"><span>W</span>Wall</button>
+          <button type="button" class="tool-button" data-tool="room"><span>R</span>Room</button>
+          <button type="button" class="tool-button" data-tool="door"><span>D</span>Door</button>
+          <button type="button" class="tool-button" data-tool="window"><span>N</span>Window</button>
+          <button type="button" class="tool-button" data-tool="floor"><span>F</span>Floor</button>
+          <button type="button" class="tool-button" data-tool="roof"><span>RF</span>Roof</button>
+          <button type="button" class="tool-button" data-tool="furniture"><span>FR</span>Furniture</button>
+          <button type="button" class="tool-button" data-tool="dimension"><span>DM</span>Dimension</button>
+          <button type="button" class="tool-button" data-tool="label"><span>T</span>Text</button>
+          <button type="button" class="tool-button danger" data-tool="eraser"><span>Del</span>Eraser</button>
+        </div>
+      </section>
+
+      <section class="side-section">
+        <h2>Tool Options</h2>
+        <label class="field">
+          <span>Furniture primitive</span>
+          <select id="furnitureType">
+            <option value="bed">Bed</option>
+            <option value="table">Table</option>
+            <option value="chair">Chair</option>
+            <option value="sofa">Sofa</option>
+            <option value="cabinet">Cabinet</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>Roof type</span>
+          <select id="defaultRoofType">
+            <option value="flat">Flat roof</option>
+            <option value="gable">Gable roof</option>
+          </select>
+        </label>
+      </section>
+
+      <section class="side-section">
+        <h2>Canvas</h2>
+        <div class="button-grid">
+          <button type="button" data-action="zoom-in">Zoom In</button>
+          <button type="button" data-action="zoom-out">Zoom Out</button>
+          <button type="button" data-action="reset-view">Reset View</button>
+          <button type="button" data-action="fit-view">Fit Blueprint</button>
+          <button type="button" data-action="toggle-snap" id="snapButton">Snap On</button>
+          <button type="button" data-action="reset-camera">Reset 3D</button>
+        </div>
+      </section>
+
+      <section class="side-section">
+        <h2>3D Detail</h2>
+        <label class="field">
+          <span>Model detail</span>
+          <select id="modelDetail">
+            <option value="detailed" selected>Detailed</option>
+            <option value="standard">Standard</option>
+            <option value="simple">Simple</option>
+          </select>
+        </label>
+        <label class="toggle-field">
+          <input id="shadowToggle" type="checkbox" checked>
+          <span>Shadows</span>
+        </label>
+        <label class="toggle-field">
+          <input id="stairsToggle" type="checkbox" checked>
+          <span>Auto stairs from Tangga rooms</span>
+        </label>
+      </section>
+    </aside>
+
+    <main class="workspace" id="workspace">
+      <section class="pane blueprint-pane" id="blueprintPane">
+        <div class="pane-header">
+          <span>2D Blueprint</span>
+          <span id="blueprintHint">Wheel zoom, middle/right drag pan</span>
+        </div>
+        <canvas id="blueprintCanvas" aria-label="2D blueprint editor"></canvas>
+      </section>
+
+      <section class="pane preview-pane" id="previewPane">
+        <div class="pane-header">
+          <span>3D Preview</span>
+          <span>Orbit controls enabled</span>
+        </div>
+        <div id="threeContainer" class="three-container" aria-label="3D generated house preview"></div>
+        <div id="webglError" class="webgl-error" hidden>WebGL is not available in this browser.</div>
+      </section>
+    </main>
+
+    <aside class="right-sidebar">
+      <section class="properties-shell">
+        <div class="properties-title">
+          <h2>Properties</h2>
+          <button type="button" data-action="delete-selected" class="delete-button">Delete</button>
+        </div>
+        <div id="propertiesPanel" class="properties-panel"></div>
+      </section>
+    </aside>
+
+    <footer class="statusbar">
+      <span>Tool: <strong id="statusTool">Select</strong></span>
+      <span>Mouse: <strong id="statusMouse">0 m, 0 m</strong></span>
+      <span>Zoom: <strong id="statusZoom">100%</strong></span>
+      <span>Grid: <strong id="statusGrid">0.5 m</strong></span>
+      <span>Snap: <strong id="statusSnap">On</strong></span>
+      <span>Selected: <strong id="statusSelected">None</strong></span>
+      <span class="status-message" id="statusMessage">Ready</span>
+    </footer>
+  </div>
+</body>
+</html>
