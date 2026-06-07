@@ -1,47 +1,47 @@
 # House Blueprint 3D Designer
 
-House Blueprint 3D Designer is a browser-based 2D blueprint editor with a generated 3D house preview. It lets you sketch walls, rooms, floors, roofs, doors, windows, furniture, dimensions, and labels, then inspect the result in a Three.js 3D scene.
+House Blueprint 3D Designer adalah editor blueprint 2D berbasis browser dengan preview rumah 3D yang dibuat otomatis. Aplikasi ini bisa dipakai untuk menggambar dinding, ruangan, lantai, atap, pintu, jendela, furnitur, dimensi, dan label, lalu melihat hasilnya dalam scene 3D berbasis Three.js.
 
-## Features
+## Fitur
 
-- Draw and edit a 2D house blueprint on a grid-based canvas.
-- Generate a live 3D preview from the blueprint.
-- Add walls, rooms, floors, roofs, doors, windows, furniture, labels, and dimensions.
-- Configure wall height, wall thickness, elevations, object colors, roof style, furniture type, and model detail.
-- Switch between 2D, 3D, and split views.
-- Save and load projects from browser localStorage.
-- Export and import project JSON files.
-- Export blueprint and 3D preview screenshots as PNG files.
+- Menggambar dan mengedit blueprint rumah 2D di canvas berbasis grid.
+- Membuat preview 3D secara langsung dari blueprint.
+- Menambahkan dinding, ruangan, lantai, atap, pintu, jendela, furnitur, label, dan dimensi.
+- Mengatur tinggi dinding, ketebalan dinding, elevasi, warna objek, gaya atap, tipe furnitur, dan detail model.
+- Berpindah antara tampilan 2D, 3D, dan split view.
+- Menyimpan dan memuat proyek dari localStorage browser.
+- Mengekspor dan mengimpor file proyek dalam format JSON.
+- Mengekspor blueprint dan screenshot preview 3D sebagai file PNG.
 
-## Running Locally
+## Menjalankan Secara Lokal
 
-This project is a static web app. No build step is required.
+Project ini adalah aplikasi web statis. Tidak ada proses build yang diperlukan.
 
-1. Clone the repository.
-2. Open `index.html` in a modern browser.
+1. Clone repository ini.
+2. Buka `index.html` di browser modern.
 
-For best browser behavior around file downloads and WebGL assets, you can also serve the folder with any static server, for example:
+Untuk perilaku browser yang lebih konsisten pada download file dan WebGL, folder project juga bisa dijalankan dengan static server, misalnya:
 
 ```bash
 python -m http.server 8000
 ```
 
-Then open `http://localhost:8000`.
+Lalu buka `http://localhost:8000`.
 
-## Project Structure
+## Struktur Project
 
 ```text
 .
-|-- index.html   # Application markup and controls
-|-- script.js    # 2D editor logic, project data model, and Three.js rendering
-|-- style.css    # Application layout and visual styling
+|-- index.html   # Markup aplikasi dan kontrol UI
+|-- script.js    # Logika editor 2D, data model project, dan rendering Three.js
+|-- style.css    # Layout aplikasi dan styling visual
 |-- LICENSE      # GNU General Public License v3.0
 `-- README.md
 ```
 
-## Dependencies
+## Dependensi
 
-The app loads these libraries from jsDelivr CDN:
+Aplikasi memuat library berikut dari jsDelivr CDN:
 
 - Three.js `0.128.0`
 - Three.js OrbitControls `0.128.0`
